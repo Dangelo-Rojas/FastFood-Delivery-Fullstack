@@ -1,0 +1,12 @@
+package com.microservice.fastfooddelivery.DTO;
+
+import lombok.Data;
+
+@Data
+public class RestauranteDTO {
+
+    private Integer id_restaurante;
+    private String direccion_restaurante;
+    private String telefono_restaurante;
+    private String correo_restaurante;
+}
