@@ -12,16 +12,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "pago")
 public class Pago {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pago")
@@ -39,7 +38,7 @@ public class Pago {
     private Integer monto;
 
     @Column(nullable = false, length = 20)
-    private String estado = "PENDIENTE";
+    private String estado = "APROBADO";
 
     @Column(name = "fecha_pago")
     private LocalDateTime fechaPago;

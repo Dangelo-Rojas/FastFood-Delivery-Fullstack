@@ -30,65 +30,36 @@ public class PagoController {
 
     @GetMapping
     public ResponseEntity<List<PagoDTO>> obtenerTodos() {
-        List<PagoDTO> pagos = pagoService.obtenerTodos();
-        if (pagos.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(pagos, HttpStatus.OK);
+        return new ResponseEntity<>(pagoService.obtenerTodos(), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PagoDTO> buscarPorId(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(pagoService.buscarPorId(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(pagoService.buscarPorId(id), HttpStatus.OK);
     }
 
     @GetMapping("/orden/{idOrden}")
     public ResponseEntity<List<PagoDTO>> obtenerPorOrden(@PathVariable Long idOrden) {
-        List<PagoDTO> pagos = pagoService.obtenerPorOrden(idOrden);
-        if (pagos.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(pagos, HttpStatus.OK);
+        return new ResponseEntity<>(pagoService.obtenerPorOrden(idOrden), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/estado/{estado}")
     public ResponseEntity<List<PagoDTO>> obtenerPorEstado(@PathVariable String estado) {
-        List<PagoDTO> pagos = pagoService.obtenerPorEstado(estado);
-        if (pagos.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(pagos, HttpStatus.OK);
+        return new ResponseEntity<>(pagoService.obtenerPorEstado(estado), HttpStatus.NO_CONTENT);
     }
 
     @PostMapping
     public ResponseEntity<PagoDTO> guardar(@Valid @RequestBody Pago pago) {
-        try {
-            return new ResponseEntity<>(pagoService.guardar(pago), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(pagoService.guardar(pago), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/estado")
     public ResponseEntity<Object> cambiarEstado(@PathVariable Long id, @RequestParam String estado) {
-        try {
-            return new ResponseEntity<>(pagoService.cambiarEstado(id, estado), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(pagoService.cambiarEstado(id, estado), HttpStatus.OK);
     }
         
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(pagoService.eliminar(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(pagoService.eliminar(id), HttpStatus.OK);
     }
-
 }

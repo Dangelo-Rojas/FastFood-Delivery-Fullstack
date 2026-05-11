@@ -1,7 +1,7 @@
 package com.microservice.fastfooddelivery.controller;
-
+ 
 import java.util.List;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+ 
 import com.microservice.fastfooddelivery.DTO.MetodoPagoDTO;
 import com.microservice.fastfooddelivery.model.MetodoPago;
 import com.microservice.fastfooddelivery.service.MetodoPagoService;
-
+ 
 import jakarta.validation.Valid;
-
+ 
 @RestController
 @RequestMapping("/api/v1/metodos-pago")
 public class MetodoPagoController {
-
-     @Autowired
+ 
+    @Autowired
     private MetodoPagoService metodoPagoService;
-
+ 
     @GetMapping
     public ResponseEntity<List<MetodoPagoDTO>> obtenerTodos() {
         List<MetodoPagoDTO> metodos = metodoPagoService.obtenerTodos();
@@ -35,41 +35,24 @@ public class MetodoPagoController {
         }
         return new ResponseEntity<>(metodos, HttpStatus.OK);
     }
-
+ 
     @GetMapping("/{id}")
     public ResponseEntity<MetodoPagoDTO> buscarPorId(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(metodoPagoService.buscarPorId(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(metodoPagoService.buscarPorId(id), HttpStatus.OK);
     }
-
+ 
     @PostMapping
-    public ResponseEntity<MetodoPagoDTO> crear(@Valid @RequestBody MetodoPago metodoPago) {
-        try {
-            return new ResponseEntity<>(metodoPagoService.guardar(metodoPago), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<MetodoPagoDTO> guardar(@Valid @RequestBody MetodoPago metodoPago) {
+        return new ResponseEntity<>(metodoPagoService.guardar(metodoPago), HttpStatus.CREATED);
     }
-
+ 
     @PutMapping("/{id}")
     public ResponseEntity<MetodoPagoDTO> actualizar(@PathVariable Long id, @RequestBody MetodoPago metodoPago) {
-        try {
-            return new ResponseEntity<>(metodoPagoService.actualizar(id, metodoPago), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(metodoPagoService.actualizar(id, metodoPago), HttpStatus.OK);
     }
-
+ 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(metodoPagoService.eliminar(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(metodoPagoService.eliminar(id), HttpStatus.OK);
     }
-
 }

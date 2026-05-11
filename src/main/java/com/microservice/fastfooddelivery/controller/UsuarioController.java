@@ -1,7 +1,7 @@
 package com.microservice.fastfooddelivery.controller;
-
+ 
 import java.util.List;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+ 
 import com.microservice.fastfooddelivery.DTO.UsuarioDTO;
 import com.microservice.fastfooddelivery.model.Usuario;
 import com.microservice.fastfooddelivery.service.UsuarioService;
-
+ 
 import jakarta.validation.Valid;
-
+ 
 @RestController
 @RequestMapping("/api/v1/usuarios")
 public class UsuarioController {
-
+ 
     @Autowired
     private UsuarioService usuarioService;
-    
+ 
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> obtenerTodos() {
         List<UsuarioDTO> usuarios = usuarioService.obtenerTodos();
@@ -35,45 +35,26 @@ public class UsuarioController {
         }
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
-
+ 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Long id) {
-        try {
-            UsuarioDTO usuario = usuarioService.buscarPorId(id);
-            return new ResponseEntity<>(usuario, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(usuarioService.buscarPorId(id), HttpStatus.OK);
     }
-
+ 
     @PostMapping
-    public ResponseEntity<Usuario> crear(@Valid @RequestBody Usuario usuario) {
-        try {
-            Usuario nuevo = usuarioService.guardar(usuario);
-            return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<UsuarioDTO> guardar(@Valid @RequestBody Usuario usuario) {
+        Usuario nuevo = usuarioService.guardar(usuario);
+        return new ResponseEntity<>(usuarioService.buscarPorId(nuevo.getIdUsuario()), HttpStatus.CREATED);
     }
-
+ 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
-        try {
-            Usuario actualizado = usuarioService.actualizar(id, usuario);
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<UsuarioDTO> actualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
+        Usuario actualizado = usuarioService.actualizar(id, usuario);
+        return new ResponseEntity<>(usuarioService.buscarPorId(actualizado.getIdUsuario()), HttpStatus.OK);
     }
-
+ 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
-        try {
-            String resultado = usuarioService.eliminar(id);
-            return new ResponseEntity<>(resultado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(usuarioService.eliminar(id), HttpStatus.OK);
     }
-
 }

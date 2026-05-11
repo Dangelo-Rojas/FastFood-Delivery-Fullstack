@@ -40,56 +40,33 @@ public class ConductorController {
 
     @GetMapping("/disponibles")
     public ResponseEntity<List<ConductorDTO>> obtenerDisponibles() {
-        List<ConductorDTO> conductores = conductorService.obtenerDisponibles();
-        if (conductores.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(conductores, HttpStatus.OK);
+        return new ResponseEntity<>(conductorService.obtenerDisponibles(), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ConductorDTO> buscarPorId(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(conductorService.buscarPorId(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(conductorService.buscarPorId(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<ConductorDTO> crear(@Valid @RequestBody Conductor conductor) {
-        try {
-            return new ResponseEntity<>(conductorService.guardar(conductor), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(conductorService.guardar(conductor), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ConductorDTO> actualizar(@PathVariable Long id, @RequestBody Conductor conductor) {
-        try {
-            return new ResponseEntity<>(conductorService.actualizar(id, conductor), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(conductorService.actualizar(id, conductor), HttpStatus.OK);
+       
     }
 
     @PutMapping("/{id}/disponibilidad")
     public ResponseEntity<ConductorDTO> cambiarDisponibilidad(@PathVariable Long id, @RequestParam Boolean disponible) {
-        try {
-            return new ResponseEntity<>(conductorService.cambiarDisponibilidad(id, disponible), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(conductorService.cambiarDisponibilidad(id, disponible), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(conductorService.eliminar(id), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(conductorService.eliminar(id), HttpStatus.OK);  
     }
 
 }

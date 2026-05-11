@@ -6,13 +6,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-public class PagoDTO {
-    private Long idPago;
+public class OrdenDTO {
+
     private Long idOrden;
-    private String nombreMetodoPago;
-    private Integer monto;
-    private String estado;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime fechaPago;
+    private LocalDateTime fechaOrden;
+
+    private String estado;
+    private Double subtotal;
+    private Double descuento;
+    private Double total;
+    private Integer idCarrito;
 }

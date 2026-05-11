@@ -2,6 +2,8 @@ package com.microservice.fastfooddelivery.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class DireccionService {
 
+    private static final Logger log = LoggerFactory.getLogger(DireccionService.class);
+
     @Autowired
     private DireccionRepository direccionRepository;
 
@@ -24,46 +28,66 @@ public class DireccionService {
     private ComunaRepository comunaRepository;
 
     public List<DireccionDTO> obtenerTodas() {
+        log.info("Obteniendo todas las direcciones");
         return direccionRepository.findAll().stream()
                 .map(this::convertirADTO)
                 .toList();
     }
 
     public List<DireccionDTO> obtenerPorUsuario(Long idUsuario) {
+        log.info("Obteniendo direcciones del usuario con ID: {}", idUsuario);
         return direccionRepository.findByIdUsuario(idUsuario).stream()
                 .map(this::convertirADTO)
                 .toList();
     }
 
     public DireccionDTO buscarPorId(Long id) {
+        log.info("Buscando direccion con ID: {}", id);
         Direccion direccion = direccionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dirección no encontrada con ID: " + id));
+                .orElseThrow(() -> {
+                    log.error("Direccion no encontrada con ID: {}", id);
+                    return new RuntimeException("Dirección no encontrada con ID: " + id);
+                });
         return convertirADTO(direccion);
     }
 
     public DireccionDTO guardar(Direccion direccion) {
-        // Buscar la comuna completa antes de guardar
+        log.info("Guardando nueva direccion: {}", direccion.getCalle());
         Comuna comuna = comunaRepository.findById(direccion.getComuna().getIdComuna())
-                .orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
+                .orElseThrow(() -> {
+                    log.error("Comuna no encontrada");
+                    return new RuntimeException("Comuna no encontrada");
+                });
         direccion.setComuna(comuna);
         Direccion guardada = direccionRepository.save(direccion);
+        log.info("Direccion guardada con ID: {}", guardada.getIdDireccion());
         return convertirADTO(guardada);
     }
 
     public Direccion actualizar(Long id, Direccion datos) {
+        log.info("Actualizando direccion con ID: {}", id);
         Direccion direccion = direccionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dirección no encontrada con ID: " + id));
+                .orElseThrow(() -> {
+                    log.error("Direccion no encontrada con ID: {}", id);
+                    return new RuntimeException("Dirección no encontrada con ID: " + id);
+                });
         direccion.setCalle(datos.getCalle());
         direccion.setNumero(datos.getNumero());
         direccion.setDepto(datos.getDepto());
         direccion.setReferencia(datos.getReferencia());
+        log.info("Direccion con ID: {} actualizada exitosamente", id);
         return direccionRepository.save(direccion);
     }
 
     public String eliminar(Long id) {
+        log.info("Eliminando direccion con ID: {}", id);
         Direccion direccion = direccionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dirección no encontrada con ID: " + id));
+                .orElseThrow(() -> {
+                    log.error("Direccion no encontrada con ID: {}", id);
+                    return new RuntimeException("Dirección no encontrada con ID: " + id);
+                });
         direccionRepository.delete(direccion);
+        log.info("Direccion con ID: {} eliminada exitosamente", id);
         return "Dirección eliminada exitosamente.";
     }
 
@@ -83,5 +107,4 @@ public class DireccionService {
         }
         return dto;
     }
-
 }
